@@ -12,6 +12,10 @@
 # The following values assume you have at least 32M ram
 
 [mysqld]
+ slow_query_log = 1
+ slow_query_log_file = /var/log/mysql/mysql-slow.log
+ long_query_time = 0
+ log-queries-not-using-indexes = 1
 #
 # * Basic Settings
 #
@@ -20,7 +24,26 @@ user		= mysql
 # socket	= /var/run/mysqld/mysqld.sock
 # port		= 3306
 # datadir	= /var/lib/mysql
-
+ max_connections=1000  # <- connection の limit を更新
+ innodb_buffer_pool_size = 1GB # ディスクイメージをメモリ上にバッファさせる値をきめる設定値(メモリの75%くらい)
+ innodb_flush_log_at_trx_commit = 0 # 1に設定するとトランザクション単位でログを出力するが 2 を指定すると1秒間に1回ログを吐く。0だとログも1秒に1回。
+ innodb_flush_method = O_DIRECT # データファイル、ログファイルの読み書き方式を指定する(実験する価値はある)
+ 
+ innodb_file_per_table=ON # InnoDBのデータ領域をテーブルごとに変える
+ 
+ # innoDBの更新ログを保持するメモリ
+ innodb_log_buffer_size = 16MB
+ 
+ # InnoDBの更新ログを記録するディスク上のファイルサイズ(innodb_buffer_pool_sizeの4分の1程度)
+ innodb_log_file_size=250MB 
+ 
+ # ORDER BYやGROUP BYのときに使われるメモリ上の領域
+ innodb_sort_buffer_size = 4MB
+ read_rnd_buffer_size = 2MB # 
+ key_buffer_size = 256MB # これも可能なら大きくした方が良い
+ 
+ disable-log-bin
+ innodb_doublewrite = 0
 
 # If MySQL is running as a replication slave, this should be
 # changed. Ref https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_tmpdir
