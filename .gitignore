@@ -1,0 +1,10 @@
+private_isu/*
+!private_isu/webapp
+private_isu/webapp/*
+!private_isu/webapp/golang
+.*
+!.gitignore
+pprotein
+pprotein-agent
+go
+backup
